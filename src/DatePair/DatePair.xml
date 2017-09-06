@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="DatePair.widget.DatePair" needsEntityContext="true" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>DatePair</name>
+    <description>The description of this widget.</description>
+
+    <icon />
+
+    <properties>
+        <property key="fromDate" type="attribute" required="true" isPath="no">
+            <caption>From Datetime</caption>
+            <category>General</category>
+            <description></description>
+            <attributeTypes>
+                <attributeType name="DateTime" />
+            </attributeTypes>
+        </property>
+        <property key="toDate" type="attribute" required="true" isPath="no">
+            <caption>To Datetime</caption>
+            <category>General</category>
+            <description></description>
+            <attributeTypes>
+                <attributeType name="DateTime" />
+            </attributeTypes>
+        </property>
+        <property key="timeFormat" type="string" required="true" defaultValue="g:ia">
+            <caption>Time Format</caption>
+            <category>General</category>
+            <description></description>
+        </property>
+        <property key="dateFormat" type="string" required="true" defaultValue="m/d/yyyy">
+            <caption>Date Format</caption>
+            <category>General</category>
+            <description></description>
+        </property>
+    </properties>
+</widget>
