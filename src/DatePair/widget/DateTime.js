@@ -29,20 +29,19 @@ define([
     "widgets/DatePair/lib/bootstrap.datepicker.js",
     "widgets/DatePair/lib/moment.js",
 
-    "dojo/text!DatePair/widget/template/DatePair.html"
+    "dojo/text!DatePair/widget/template/DateTime.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent, _jQuery, Datepair, _timepicker, _datepicker, Moment, widgetTemplate) {
     "use strict";
 
     var $ = _jQuery.noConflict(true);
 
-    return declare("DatePair.widget.DatePair", [_WidgetBase, _TemplatedMixin], {
+    return declare("DatePair.widget.DateTime", [_WidgetBase, _TemplatedMixin], {
 
         templateString: widgetTemplate,
 
         timeFormat: null,
         dateFormat: null,
         fromDate: null,
-        toDate: null,
         widgetBase: null,
 
         // Internal variables.
@@ -84,11 +83,9 @@ define([
             }));
             $('.start.date').datepicker('update', new Date(obj.get(this.fromDate)))
             $('.start.time').timepicker('setTime', new Date(obj.get(this.fromDate)))
-            $('.end.date').datepicker('update', new Date(obj.get(this.toDate)))
-            $('.end.time').timepicker('setTime', new Date(obj.get(this.toDate)))
 
-            var dp = new Datepair(this.domNode.firstElementChild);
-            console.log(dp)
+            // var dp = new Datepair(this.domNode.firstElementChild);
+            // console.log(dp)
 
 
             this._contextObj = obj;
@@ -101,18 +98,9 @@ define([
                     $('.start.time').timepicker('setTime', new Date(attrValue))
                 })
             });
-            var _toDateHandle = this.subscribe({
-                guid: this._contextObj.getGuid(), // the guid
-                attr: this.toDate, // the attributeName
-                callback: lang.hitch(this, function(guid, attr, attrValue) {
-                    // this._updateButtonTitle(); // do something
-                    $('.end.date').datepicker('update', new Date(attrValue))
-                    $('.end.time').timepicker('setTime', new Date(attrValue))
-                })
-            });
-            this.unsubscribeAll();
+
             this._handles.push(_fromDateHandle);
-            this._handles.push(_toDateHandle);
+
             this._updateRendering(callback);
         },
 
@@ -129,27 +117,16 @@ define([
          */
         _pushValuesToContext: function() {
             var originalFrom = new Date(this._contextObj.get(this.fromDate)),
-                originalTo = new Date(this._contextObj.get(this.toDate)),
                 input = {
                     startDate: this.startDateNode.value,
                     startTime: this.startTimeNode.value,
-                    endDate: this.endDateNode.value,
-                    endTime: this.endTimeNode.value
                 },
                 newFromMoment = Moment(input.startDate + ' ' + input.startTime, this._convertToMomentFormatString(this.dateFormat + ' ' + this.timeFormat)),
-                newToMoment = Moment(input.endDate + ' ' + input.endTime, this._convertToMomentFormatString(this.dateFormat + ' ' + this.timeFormat)),
-                newFrom = newFromMoment.toDate(),
-                newTo = newToMoment.toDate();
-
+                newFrom = newFromMoment.toDate()
 
             if (newFromMoment.isValid() && newFrom.getTime() != originalFrom.getTime()) {
                 this._contextObj.set(this.fromDate, newFrom);
             }
-            if (newToMoment.isValid() && newTo.getTime() != originalTo.getTime()) {
-                this._contextObj.set(this.toDate, newTo);
-            }
-
-
 
             // do some calculation here, then set the value in this._contextObj
         },
@@ -198,4 +175,4 @@ define([
     });
 });
 
-require(["DatePair/widget/DatePair"]);
+require(["DatePair/widget/DateTime"]);
