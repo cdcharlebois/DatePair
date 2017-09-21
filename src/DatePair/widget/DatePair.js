@@ -56,15 +56,21 @@ define([
         postCreate: function() {
             logger.debug(this.id + ".postCreate");
             if (!this.editable) {
-                $('input', this.domNode.firstElementChild).prop("disabled", true)
+                this._setDisabled();
             }
         },
 
+        _setDisabled: function() {
+            $('input', this.domNode.firstElementChild).prop("disabled", true)
+        },
         /**
          * init the timepicker and datepicker, set initial values
          */
         update: function(obj, callback) {
             logger.debug(this.id + ".update");
+            if (obj.isReadonlyAttr(this.fromDate)) {
+                this._setDisabled();
+            }
             $('.time', this.domNode.firstElementChild).timepicker({
                 showDuration: true,
                 timeFormat: this.timeFormat

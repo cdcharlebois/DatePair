@@ -13,16 +13,16 @@ typora-root-url: .
 1. Install the widget in your project
 2. Include the **DateTime** widget on a page where you'd like to display an independent date and time picker for a Datetime attribute. Include the **DatePair** widget on a page where you'd like to display a linked pair of Datetime attributes (i.e. a start and end datetime, for appointments, etc)
 3. Configure the widget:
+   ![17FF3ADE-3D12-47F7-B48F-A25A05467E2A](/assets/17FF3ADE-3D12-47F7-B48F-A25A05467E2A.png)
 
-+ `breakpoint` : Screen width (in pixels) to split between the large number of items and the small number
-+ `Large Number` : Number of tabs to show above the breakpoint
-+ `Small Number` : Number of tabs to show below the breakpoint
-+ `Tabs Class (To Add)` : Add a class to the bar of tab headings
++ `DateTime` : The attribute(s) to use for the Datetimes displayed
++ `Time Format` : The format of the timepicker (follows [this formatting](http://php.net/manual/en/function.date.php))
++ `Date Format` : the format of the datepicker (follows [this formatting](http://bootstrap-datepicker.readthedocs.io/en/latest/options.html#format))
++ `Editable` : Should the fields be editable? (Entity `isReadOnlyAttr()` will override this.)
 
 ### Typical usage scenario
 
-- When you have a lot of tabs and don't want them to stack 🍔
-- Works nicely with **[Swipeable Tabs](https://github.com/cdcharlebois/SwipeableTabs)** widget
+- Scheduling appointments (since is shows the duration when both are on the same day)
 
 ### Known Limitations
 
