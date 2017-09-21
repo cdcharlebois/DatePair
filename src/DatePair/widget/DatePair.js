@@ -55,6 +55,9 @@ define([
 
         postCreate: function() {
             logger.debug(this.id + ".postCreate");
+            if (!this.editable) {
+                $('input', this.domNode.firstElementChild).prop("disabled", true)
+            }
         },
 
         /**
@@ -88,7 +91,7 @@ define([
             $('.end.time').timepicker('setTime', new Date(obj.get(this.toDate)))
 
             var dp = new Datepair(this.domNode.firstElementChild);
-            console.log(dp)
+            // console.log(dp)
 
 
             this._contextObj = obj;

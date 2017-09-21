@@ -54,6 +54,9 @@ define([
 
         postCreate: function() {
             logger.debug(this.id + ".postCreate");
+            if (!this.editable) {
+                $('input', this.domNode.firstElementChild).prop("disabled", true)
+            }
         },
 
         /**
@@ -98,7 +101,7 @@ define([
                     $('.start.time').timepicker('setTime', new Date(attrValue))
                 })
             });
-
+            this.unsubscribeAll();
             this._handles.push(_fromDateHandle);
 
             this._updateRendering(callback);
