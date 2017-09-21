@@ -23,11 +23,11 @@ define([
     "dojo/html",
     "dojo/_base/event",
     "DatePair/lib/jquery-1.11.2",
-    "widgets/DatePair/lib/datepair.js",
-    "widgets/DatePair/lib/jquery.timepicker.js",
+    "DatePair/lib/datepair",
+    "DatePair/lib/jquery.timepicker",
     // "widgets/DatePair/lib/jquery.datepair.js",
-    "widgets/DatePair/lib/bootstrap.datepicker.js",
-    "widgets/DatePair/lib/moment.js",
+    "DatePair/lib/bootstrap.datepicker",
+    "DatePair/lib/moment",
 
     "dojo/text!DatePair/widget/template/DateTime.html"
 ], function(declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent, _jQuery, Datepair, _timepicker, _datepicker, Moment, widgetTemplate) {
