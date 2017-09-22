@@ -8,60 +8,22 @@
 
 define([
     "dojo/_base/declare",
-    "mxui/widget/_WidgetBase",
-    "dijit/_TemplatedMixin",
-    "mxui/dom",
-    "dojo/dom",
-    "dojo/dom-prop",
-    "dojo/dom-geometry",
-    "dojo/dom-class",
-    "dojo/dom-style",
-    "dojo/dom-construct",
-    "dojo/_base/array",
-    "dojo/_base/lang",
-    "dojo/text",
-    "dojo/html",
-    "dojo/_base/event",
+    "DatePair/widget/DateTime",
+    "dojo/text!DatePair/widget/template/DatePair.html",
+    // external
     "DatePair/lib/jquery-1.11.2",
     "DatePair/lib/datepair",
     "DatePair/lib/jquery.timepicker",
     "DatePair/lib/bootstrap.datepicker",
     "DatePair/lib/moment",
-
-    "dojo/text!DatePair/widget/template/DatePair.html"
-], function(declare, _WidgetBase, _TemplatedMixin, dom, dojoDom, dojoProp, dojoGeometry, dojoClass, dojoStyle, dojoConstruct, dojoArray, lang, dojoText, dojoHtml, dojoEvent, _jQuery, Datepair, _timepicker, _datepicker, Moment, widgetTemplate) {
-    "use strict";
-
+    "dojo/_base/lang",
+    "dojo/dom-style"
+], function(declare, DateTimeWidget, widgetTemplate, _jQuery, Datepair, _timepicker, _datepicker, Moment, lang, dojoStyle) {
     var $ = _jQuery.noConflict(true);
-
-    return declare("DatePair.widget.DatePair", [_WidgetBase, _TemplatedMixin], {
+    return declare("DatePair.widget.DatePair", [DateTimeWidget], {
 
         templateString: widgetTemplate,
 
-        timeFormat: null,
-        dateFormat: null,
-        fromDate: null,
-        toDate: null,
-        widgetBase: null,
-
-        // Internal variables.
-        _handles: null,
-        _contextObj: null,
-
-        constructor: function() {
-            this._handles = [];
-        },
-
-        postCreate: function() {
-            logger.debug(this.id + ".postCreate");
-            if (!this.editable) {
-                this._setDisabled();
-            }
-        },
-
-        _setDisabled: function() {
-            $('input', this.domNode.firstElementChild).prop("disabled", true)
-        },
         /**
          * init the timepicker and datepicker, set initial values
          */
@@ -123,15 +85,6 @@ define([
             this._handles.push(_toDateHandle);
             this._updateRendering(callback);
         },
-
-        resize: function(box) {
-            logger.debug(this.id + ".resize");
-        },
-
-        uninitialize: function() {
-            logger.debug(this.id + ".uninitialize");
-        },
-
         /**
          * take values from the custom text fields and update the values in the context
          */
@@ -160,52 +113,7 @@ define([
 
 
             // do some calculation here, then set the value in this._contextObj
-        },
-
-        /**
-         * since the datepair widget supports multiple heterogeneous libaries for formatting, we need to convert them.
-         *  Maybe we can just find two libraries that use the same formatting as Moment?
-         */
-        _convertToMomentFormatString: function(formatString) {
-            // TIMEPICKER CHANGES
-            //a --> a
-            //g|G --> h|H
-            //h|H --> ??
-            //i --> m
-            //s --> s
-            // DATEPICKER CHANGES
-            // m --> M
-            // d --> D
-            // yyyy --> YYYY
-            return formatString
-                .split('m').join('M')
-                .split('d').join('D')
-                .split('yyyy').join('YYYY')
-                .split('g').join('h')
-                .split('G').join('H')
-                .split('i').join('m');
-        },
-
-        _updateRendering: function(callback) {
-            logger.debug(this.id + "._updateRendering");
-
-            if (this._contextObj !== null) {
-                dojoStyle.set(this.domNode, "display", "block");
-            } else {
-                dojoStyle.set(this.domNode, "display", "none");
-            }
-
-            this._executeCallback(callback);
-        },
-
-        _executeCallback: function(cb) {
-            if (cb && typeof cb === "function") {
-                cb();
-            }
-        },
-        uninitialize: function() {
-            this.unsubscribeAll();
-        },
+        }
     });
 });
 

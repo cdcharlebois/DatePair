@@ -22,6 +22,8 @@ define([
     "dojo/text",
     "dojo/html",
     "dojo/_base/event",
+
+    // external
     "DatePair/lib/jquery-1.11.2",
     "DatePair/lib/datepair",
     "DatePair/lib/jquery.timepicker",
