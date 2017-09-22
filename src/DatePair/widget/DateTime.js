@@ -25,7 +25,6 @@ define([
     "DatePair/lib/jquery-1.11.2",
     "DatePair/lib/datepair",
     "DatePair/lib/jquery.timepicker",
-    // "widgets/DatePair/lib/jquery.datepair.js",
     "DatePair/lib/bootstrap.datepicker",
     "DatePair/lib/moment",
 
@@ -107,7 +106,7 @@ define([
                     $('.start.time').timepicker('setTime', new Date(attrValue))
                 })
             });
-            this.unsubscribeAll();
+            // this.unsubscribeAll();
             this._handles.push(_fromDateHandle);
 
             this._updateRendering(callback);
@@ -180,7 +179,11 @@ define([
             if (cb && typeof cb === "function") {
                 cb();
             }
-        }
+        },
+
+        uninitialize: function() {
+            this.unsubscribeAll();
+        },
     });
 });
 

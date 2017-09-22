@@ -118,7 +118,7 @@ define([
                     $('.end.time').timepicker('setTime', new Date(attrValue))
                 })
             });
-            this.unsubscribeAll();
+            // this.unsubscribeAll();
             this._handles.push(_fromDateHandle);
             this._handles.push(_toDateHandle);
             this._updateRendering(callback);
@@ -202,7 +202,10 @@ define([
             if (cb && typeof cb === "function") {
                 cb();
             }
-        }
+        },
+        uninitialize: function() {
+            this.unsubscribeAll();
+        },
     });
 });
 
