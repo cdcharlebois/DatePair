@@ -1,11 +1,16 @@
-/* PICKADATE CORE */
+/* CORE CLASSIC */
+
+.picker,
+.picker__holder {
+    width: 100%;
+    position: absolute
+}
 
 .picker {
     font-size: 16px;
     text-align: left;
     line-height: 1.2;
     color: #000;
-    position: absolute;
     z-index: 10000;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -22,126 +27,58 @@
 }
 
 .picker__holder {
-    width: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    position: fixed;
-    transition: background .15s ease-out, -webkit-transform 0s .15s;
-    transition: background .15s ease-out, transform 0s .15s;
-    -webkit-backface-visibility: hidden
-}
-
-
-/*!
- * Default mobile-first, responsive styling for pickadate.js
- * Demo: http://amsul.github.io/pickadate.js
- */
-
-.picker__frame,
-.picker__holder {
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    -webkit-transform: translateY(100%);
-    -ms-transform: translateY(100%);
-    transform: translateY(100%)
-}
-
-.picker__frame {
-    position: absolute;
-    margin: 0 auto;
-    min-width: 256px;
-    max-width: 666px;
-    width: 100%;
+    background: #fff;
+    border: 1px solid #aaa;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-radius: 0 0 5px 5px;
+    box-sizing: border-box;
+    min-width: 176px;
+    max-width: 466px;
+    max-height: 0;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
     filter: alpha(opacity=0);
     -moz-opacity: 0;
     opacity: 0;
-    transition: all .15s ease-out
+    -webkit-transform: translateY(-1em)perspective(600px)rotateX(10deg);
+    transform: translateY(-1em)perspective(600px)rotateX(10deg);
+    transition: -webkit-transform .15s ease-out, opacity .15s ease-out, max-height 0s .15s, border-width 0s .15s;
+    transition: transform .15s ease-out, opacity .15s ease-out, max-height 0s .15s, border-width 0s .15s
+}
+
+
+/*!
+ * Classic picker styling for pickadate.js
+ * Demo: http://amsul.github.io/pickadate.js
+ */
+
+.picker__frame {
+    padding: 1px
 }
 
 .picker__wrap {
-    display: table;
-    width: 100%;
-    height: 100%
-}
-
-@media (min-height:33.875em) {
-    .picker__frame {
-        overflow: visible;
-        top: auto;
-        bottom: -100%;
-        max-height: 80%
-    }
-    .picker__wrap {
-        display: block
-    }
-}
-
-.picker__box {
-    background: #fff;
-    display: table-cell;
-    vertical-align: middle
-}
-
-@media (min-height:26.5em) {
-    .picker__box {
-        font-size: 1.25em
-    }
-}
-
-@media (min-height:33.875em) {
-    .picker__box {
-        display: block;
-        font-size: 1.33em;
-        border: 1px solid #777;
-        border-top-color: #898989;
-        border-bottom-width: 0;
-        border-radius: 5px 5px 0 0;
-        box-shadow: 0 12px 36px 16px rgba(0, 0, 0, .24)
-    }
-}
-
-@media (min-height:40.125em) {
-    .picker__frame {
-        margin-bottom: 7.5%
-    }
-    .picker__box {
-        font-size: 1.5em;
-        border-bottom-width: 1px;
-        border-radius: 5px
-    }
+    margin: -1px
 }
 
 .picker--opened .picker__holder {
-    -webkit-transform: translateY(0);
-    -ms-transform: translateY(0);
-    transform: translateY(0);
-    zoom: 1;
-    background: rgba(0, 0, 0, .32);
-    transition: background .15s ease-out
-}
-
-.picker--opened .picker__frame {
-    -webkit-transform: translateY(0);
-    -ms-transform: translateY(0);
-    transform: translateY(0);
+    max-height: 25em;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
     filter: alpha(opacity=100);
     -moz-opacity: 1;
-    opacity: 1
+    opacity: 1;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    -webkit-transform: translateY(0)perspective(600px)rotateX(0);
+    transform: translateY(0)perspective(600px)rotateX(0);
+    transition: -webkit-transform .15s ease-out, opacity .15s ease-out, max-height 0s, border-width 0s;
+    transition: transform .15s ease-out, opacity .15s ease-out, max-height 0s, border-width 0s;
+    box-shadow: 0 6px 18px 1px rgba(0, 0, 0, .12)
 }
 
-@media (min-height:33.875em) {
-    .picker--opened .picker__frame {
-        top: auto;
-        bottom: 0
-    }
-}
 
-
-/* PICKADATE DATE */
+/* CLASSIC DATE */
 
 .picker__footer,
 .picker__header,
@@ -439,7 +376,7 @@
 }
 
 
-/* PICKADATE TIME */
+/* CLASSIC TIME */
 
 .picker--focused .picker__list-item--highlighted,
 .picker__list-item--highlighted:hover,
@@ -530,19 +467,22 @@
     border-color: #fff
 }
 
-.picker--time .picker__frame {
+.picker--time {
     min-width: 256px;
     max-width: 320px
 }
 
-.picker--time .picker__box {
-    font-size: 1em;
-    background: #f2f2f2;
-    padding: 0
+.picker--time .picker__holder {
+    background: #f2f2f2
 }
 
 @media (min-height:40.125em) {
-    .picker--time .picker__box {
-        margin-bottom: 5em
+    .picker--time .picker__holder {
+        font-size: .875em
     }
+}
+
+.picker--time .picker__box {
+    padding: 0;
+    position: relative
 }

@@ -32,7 +32,7 @@ define([
         // "DatePair/lib/jquery.timepicker",
         // "DatePair/lib/bootstrap.datepicker",
 
-        "DatePair/lib/moment",
+        // "DatePair/lib/moment",
 
         "dojo/text!DatePair/widget/template/DateTime.html"
     ],
@@ -58,7 +58,7 @@ define([
         // Datepair,
         // _timepicker,
         // _datepicker,
-        Moment,
+        // Moment,
         widgetTemplate) {
         "use strict";
 
@@ -72,6 +72,9 @@ define([
             dateFormat: null,
             fromDate: null,
             widgetBase: null,
+
+            _date: null,
+            _time: null,
 
             // Internal variables.
             _handles: null,
@@ -89,79 +92,93 @@ define([
             },
 
             _setDisabled: function() {
-                $('input', this.domNode.firstElementChild).prop("disabled", true)
+                $("input", this.domNode.firstElementChild).prop("disabled", true);
             },
 
             _initDatepicker: function($el, options) {
                 // var $el = $(node);
-                console.log('initializing datepicker on the following node: ');
+                console.log("initializing datepicker on the following node: ");
                 console.log($el);
-                $el.pickadate(options);
+                var $input = $el.pickadate(options);
+                return $input.pickadate("picker");
             },
 
             _initTimepicker: function($el, options) {
-                console.log('initializing timepicker on the following node: ');
+                console.log("initializing timepicker on the following node: ");
                 console.log($el);
-                $el.pickatime(options);
+                var $input = $el.pickatime(options);
+                return $input.pickatime("picker");
             },
+
+            /**
+             * data :: {
+             *  value: number
+             *  type:  "date" | "time"
+             * }
+             */
+            _handleDateTimeChange: function(data) {
+                if (data.value.highlight || typeof data.value.select === "object") return; // do nothing because this is hit by the subscription
+                if (data.type === "date") {
+                    this._date = data.value.select;
+                } else {
+                    this._time = data.value.select;
+                }
+                var newDate = new Date((this._date || 0) + (this._time || 0) * 60 * 1000);
+                this._contextObj.set(this.fromDate, newDate);
+            },
+
             /**
              * init the timepicker and datepicker, set initial values
              */
             update: function(obj, callback) {
                 logger.debug(this.id + ".update");
-                if (obj.isReadonlyAttr(this.fromDate)) {
+                this._contextObj = obj;
+
+                if (this._contextObj.isReadonlyAttr(this.fromDate)) {
                     this._setDisabled();
                 }
+                var min_d, max_d, min_t, max_t;
+                if (this.rangeMinDate) {
+                    min_d = new Date(this._contextObj.get(this.rangeMinDate));
+                } else {
+                    min_d = (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null)
+                }
+                if (this.rangeMaxDate) {
+                    max_d = new Date(this._contextObj.get(this.rangeMaxDate));
+                } else {
+                    max_d = (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null)
+                }
+
+                // DATEPICKER OPTIONS
                 var options_d = {
-                        format: 'm/d/yyyy',
+                        format: this.dateFormat,
+                        min: min_d,
+                        max: max_d,
                         onSet: lang.hitch(this, function(data) {
-                            console.log(data); // unix timestamp
-                            // this._pushValuesToContext();
+                            this._handleDateTimeChange({ type: "date", value: data });
                         })
                     },
+                    // TIMEPICKER OPTIONS
                     options_t = {
-                        format: 'h:i A',
+                        format: this.timeFormat,
                         onSet: lang.hitch(this, function(data) {
-                            console.log(data) // minutes after midnight
+                            this._handleDateTimeChange({ type: "time", value: data });
                         })
                     };
-                this._initDatepicker($('.date', this.domNode.firstElementChild), options_d)
-                this._initTimepicker($('.time', this.domNode.firstElementChild), options_t)
-                    // $('.time', this.domNode.firstElementChild).timepicker({
-                    //     showDuration: true,
-                    //     timeFormat: this.timeFormat
-                    // }).on('change', lang.hitch(this, function(event) {
-                    //     //this._contextObj.set('To', new Date())
-                    //     // console.log(`TODO: update context object values`)
-                    //     setTimeout(lang.hitch(this, function() {
-                    //         this._pushValuesToContext()
-                    //     }), 100);
-                    // }));
-
-                // $('.date', this.domNode.firstElementChild).datepicker({
-                //     format: this.dateFormat,
-                //     autoclose: true
-                // }).on('change', lang.hitch(this, function(event) {
-                //     // console.log(`TODO: update context object values`)
-                //     setTimeout(lang.hitch(this, function() {
-                //         this._pushValuesToContext()
-                //     }), 100);
-                // }));
-                // $('.start.date').datepicker('update', new Date(obj.get(this.fromDate)))
-                // $('.start.time').timepicker('setTime', new Date(obj.get(this.fromDate)))
-
-                // var dp = new Datepair(this.domNode.firstElementChild);
-                // console.log(dp)
 
 
-                this._contextObj = obj;
+
+                this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options_d);
+                this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options_t);
+                this._setDateTimePickerValues(this._contextObj.get(this.fromDate));
+
+
+
                 var _fromDateHandle = this.subscribe({
                     guid: this._contextObj.getGuid(), // the guid
                     attr: this.fromDate, // the attributeName
                     callback: lang.hitch(this, function(guid, attr, attrValue) {
-                        // this._updateButtonTitle(); // do something
-                        $('.start.date').datepicker('update', new Date(attrValue))
-                        $('.start.time').timepicker('setTime', new Date(attrValue))
+                        this._setDateTimePickerValues(attrValue);
                     })
                 });
                 // this.unsubscribeAll();
@@ -170,55 +187,55 @@ define([
                 this._updateRendering(callback);
             },
 
-            resize: function(box) {
-                logger.debug(this.id + ".resize");
+            _setDateTimePickerValues: function(datetime) {
+                this._date = new Date(datetime).setHours(0, 0, 0, 0);
+                this._time = (new Date(datetime) - new Date().setHours(0, 0, 0, 0)) / 1000 / 60;
+                if (this.dp) {
+                    this.dp.set("select", new Date(datetime));
+                }
+                if (this.tp) {
+                    this.tp.set("select", new Date(datetime));
+                }
             },
 
-            uninitialize: function() {
-                logger.debug(this.id + ".uninitialize");
+            resize: function(box) {
+                logger.debug(this.id + ".resize");
             },
 
             /**
              * take values from the custom text fields and update the values in the context
              */
-            _pushValuesToContext: function() {
-                var originalFrom = new Date(this._contextObj.get(this.fromDate)),
-                    input = {
-                        startDate: this.startDateNode.value,
-                        startTime: this.startTimeNode.value,
-                    },
-                    newFromMoment = Moment(input.startDate + ' ' + input.startTime, this._convertToMomentFormatString(this.dateFormat + ' ' + this.timeFormat)),
-                    newFrom = newFromMoment.toDate()
+            // _pushValuesToContext: function() {
+            //     var originalFrom = new Date(this._contextObj.get(this.fromDate)),
+            //         input = {
+            //             startDate: this.startDateNode.value,
+            //             startTime: this.startTimeNode.value,
+            //         },
+            //         newFromMoment = new Moment(input.startDate + " " + input.startTime, this._convertToMomentFormatString(this.dateFormat + " " + this.timeFormat)),
+            //         newFrom = newFromMoment.toDate()
 
-                if (newFromMoment.isValid() && newFrom.getTime() != originalFrom.getTime()) {
-                    this._contextObj.set(this.fromDate, newFrom);
-                }
+            //     if (newFromMoment.isValid() && newFrom.getTime() !== originalFrom.getTime()) {
+            //         this._contextObj.set(this.fromDate, newFrom);
+            //     }
 
-                // do some calculation here, then set the value in this._contextObj
-            },
+            //     // do some calculation here, then set the value in this._contextObj
+            // },
 
             /**
              * since the datepair widget supports multiple heterogeneous libaries for formatting, we need to convert them.
              *  Maybe we can just find two libraries that use the same formatting as Moment?
              */
             _convertToMomentFormatString: function(formatString) {
-                // TIMEPICKER CHANGES
-                //a --> a
-                //g|G --> h|H
-                //h|H --> ??
-                //i --> m
-                //s --> s
-                // DATEPICKER CHANGES
-                // m --> M
-                // d --> D
-                // yyyy --> YYYY
+                // TIMEPICKER
+                // DATEPICKER
+                // http://amsul.ca/pickadate.js/date/#formatting-rules
                 return formatString
-                    .split('m').join('M')
-                    .split('d').join('D')
-                    .split('yyyy').join('YYYY')
-                    .split('g').join('h')
-                    .split('G').join('H')
-                    .split('i').join('m');
+                    .split("m").join("M")
+                    .split("d").join("D")
+                    .split("yyyy").join("YYYY")
+                    .split("g").join("h")
+                    .split("G").join("H")
+                    .split("i").join("m");
             },
 
             _updateRendering: function(callback) {
