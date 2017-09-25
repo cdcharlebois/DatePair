@@ -13,19 +13,20 @@
         <attributeType name="DateTime" />
       </attributeTypes>
     </property>
+    <!-- DATE -->
     <property key="rangeMinNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Date</caption>
-      <category>Selectable Dates</category>
+      <category>Date</category>
       <description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description>
     </property>
     <property key="rangeMaxNumber" type="string" required="true" defaultValue="0">
       <caption>Latest Selectable Date</caption>
-      <category>Selectable Dates</category>
+      <category>Date</category>
       <description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description>
     </property>
     <property key="rangeMinDate" type="attribute" required="false" isPath="optional" pathType="reference">
       <caption>Earliest Selectable Date (attr)</caption>
-      <category>Selectable Dates</category>
+      <category>Date</category>
       <description>A Datetime attribute representing the earliest selectable date. **Overrides the integer value above**</description>
       <attributeTypes>
         <attributeType name="DateTime" />
@@ -33,26 +34,42 @@
     </property>
     <property key="rangeMaxDate" type="attribute" required="false" isPath="optional" pathType="reference">
       <caption>Latest Selectable Date (attr)</caption>
-      <category>Selectable Dates</category>
+      <category>Date</category>
       <description>A Datetime attribute representing the latest selectable date. **Overrides the integer value above**</description>
       <attributeTypes>
         <attributeType name="DateTime" />
       </attributeTypes>
     </property>
-    <property key="timeFormat" type="string" required="true" defaultValue="h:i A">
-      <caption>Time Format</caption>
-      <category>Formatting</category>
-      <description>See http://amsul.ca/pickadate.js/time/#formatting-rules for more info</description>
-    </property>
     <property key="dateFormat" type="string" required="true" defaultValue="m/d/yyyy">
       <caption>Date Format</caption>
-      <category>Formatting</category>
+      <category>Date</category>
       <description>See http://amsul.ca/pickadate.js/date/#formatting-rules for more info</description>
     </property>
     <property key="editable" type="boolean" required="true" defaultValue="true">
       <caption>Editable</caption>
       <category>General</category>
       <description></description>
+    </property>
+    <!-- TIME -->
+    <property key="timeFormat" type="string" required="true" defaultValue="h:i A">
+      <caption>Time Format</caption>
+      <category>Time</category>
+      <description>See http://amsul.ca/pickadate.js/time/#formatting-rules for more info</description>
+    </property>
+    <property key="timeInterval" type="integer" required="true" defaultValue="30">
+      <caption>Interval (Mins)</caption>
+      <category>Time</category>
+      <description></description>
+    </property>
+    <property key="rangeMinTimeNumber" type="string" required="true" defaultValue="0">
+      <caption>Earliest Selectable Time</caption>
+      <category>Time</category>
+      <description>An integer (intervals, relative to now). i.e. -1 is one interval ago, +2 is two intervals from now. You may also enter time in 24h format i.e. `08:30` for 8:30am or `16:45` for 4:45pm</description>
+    </property>
+    <property key="rangeMaxTimeNumber" type="string" required="true" defaultValue="0">
+      <caption>Latest Selectable Time</caption>
+      <category>Time</category>
+      <description>An integer (intervals, relative to now). i.e. -1 is one interval ago, +2 is two intervals from now. You may also enter time in 24h format i.e. `08:30` for 8:30am or `16:45` for 4:45pm</description>
     </property>
   </properties>
 </widget>

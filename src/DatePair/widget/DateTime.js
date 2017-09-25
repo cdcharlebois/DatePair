@@ -141,12 +141,30 @@ define([
                 if (this.rangeMinDate) {
                     min_d = new Date(this._contextObj.get(this.rangeMinDate));
                 } else {
-                    min_d = (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null)
+                    min_d = (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null);
                 }
                 if (this.rangeMaxDate) {
                     max_d = new Date(this._contextObj.get(this.rangeMaxDate));
                 } else {
-                    max_d = (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null)
+                    max_d = (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null);
+                }
+                if (this.rangeMinTimeNumber !== "0") {
+                    if (this.rangeMinTimeNumber.indexOf(":") > -1) {
+                        // this is a time, split into an array
+                        min_t = this.rangeMinTimeNumber.split(":").map(function(i) { return i * 1; });
+                    } else {
+                        // this is a number (hopefully)
+                        min_t = this.rangeMinTimeNumber * 1;
+                    }
+                }
+                if (this.rangeMaxTimeNumber !== "0") {
+                    if (this.rangeMaxTimeNumber.indexOf(":") > -1) {
+                        // this is a time, split into an array
+                        max_t = this.rangeMaxTimeNumber.split(":").map(function(i) { return i * 1; });
+                    } else {
+                        // this is a number (hopefully)
+                        max_t = this.rangeMaxTimeNumber * 1;
+                    }
                 }
 
                 // DATEPICKER OPTIONS
@@ -161,6 +179,9 @@ define([
                     // TIMEPICKER OPTIONS
                     options_t = {
                         format: this.timeFormat,
+                        interval: this.timeInterval,
+                        min: min_t,
+                        max: max_t,
                         onSet: lang.hitch(this, function(data) {
                             this._handleDateTimeChange({ type: "time", value: data });
                         })
