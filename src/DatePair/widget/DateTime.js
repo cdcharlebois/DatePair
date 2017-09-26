@@ -127,6 +127,96 @@ define([
                 this._contextObj.set(this.fromDate, newDate);
             },
 
+            _getDatePickerOptions: function() {
+                return new Promise(lang.hitch(this, function(resolve, reject) {
+                    var defaultDatePickerOptions = {
+                        format: this.dateFormat,
+                        onSet: lang.hitch(this, function(data) {
+                            this._handleDateTimeChange({ type: "date", value: data });
+                        })
+                    };
+                    // OPTIONS FROM WIDGET PROPS
+                    var customOptions = {
+                        min: (this.rangeMinDate ? new Date(this._contextObj.get(this.rangeMinDate)) : (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null)),
+                        max: (this.rangeMaxDate ? new Date(this._contextObj.get(this.rangeMaxDate)) : (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null)),
+                        disable: this.disabledDaysOfWeek.split(",").map(function(i) { return i * 1; })
+                    };
+                    if (this.disabledDatesMf) {
+                        // check to make sure the sourceentity and attribute are setup
+                        this._asyncCallMf(this.disabledDatesMf)
+                            .then(lang.hitch(this, function(data) {
+                                console.log(data);
+                                data.forEach(lang.hitch(this, function(d) {
+                                    customOptions.disable.push(new Date(d.get(this.disabledDatesAttr)))
+                                }));
+                            }))
+                            .then(lang.hitch(this, function() {
+                                resolve(Object.assign(defaultDatePickerOptions, customOptions));
+                            }));
+                    } else {
+                        resolve(Object.assign(defaultDatePickerOptions, customOptions));
+                    }
+
+                }));
+
+
+            },
+
+            _asyncCallMf: function(mfname) {
+                return new Promise(lang.hitch(this, function(resolve, reject) {
+                    mx.data.action({
+                        params: {
+                            applyto: "selection",
+                            actionname: mfname,
+                            guids: [this._contextObj.getGuid()]
+                        },
+                        callback: function(data) {
+                            resolve(data);
+                        },
+                        error: function(err) {
+                            reject(err);
+                        }
+                    });
+                }));
+
+            },
+
+            _getTimePickerOptions: function() {
+                return new Promise(lang.hitch(this, function(resolve, reject) {
+                    var defaultTimePickerOptions = {
+                        format: this.timeFormat,
+                        onSet: lang.hitch(this, function(data) {
+                            this._handleDateTimeChange({ type: "time", value: data });
+                        })
+                    };
+                    var min_t, max_t;
+                    if (this.rangeMinTimeNumber !== "0") {
+                        if (this.rangeMinTimeNumber.indexOf(":") > -1) {
+                            // this is a time, split into an array
+                            min_t = this.rangeMinTimeNumber.split(":").map(function(i) { return i * 1; });
+                        } else {
+                            // this is a number (hopefully)
+                            min_t = this.rangeMinTimeNumber * 1;
+                        }
+                    }
+                    if (this.rangeMaxTimeNumber !== "0") {
+                        if (this.rangeMaxTimeNumber.indexOf(":") > -1) {
+                            // this is a time, split into an array
+                            max_t = this.rangeMaxTimeNumber.split(":").map(function(i) { return i * 1; });
+                        } else {
+                            // this is a number (hopefully)
+                            max_t = this.rangeMaxTimeNumber * 1;
+                        }
+                    }
+                    // OPTIONS FROM WIDGET PROPS
+                    resolve(Object.assign(defaultTimePickerOptions, {
+                        min: min_t,
+                        max: max_t,
+                        interval: this.timeInterval
+                    }));
+                }));
+
+            },
             /**
              * init the timepicker and datepicker, set initial values
              */
@@ -137,76 +227,34 @@ define([
                 if (this._contextObj.isReadonlyAttr(this.fromDate)) {
                     this._setDisabled();
                 }
-                var min_d, max_d, min_t, max_t;
-                if (this.rangeMinDate) {
-                    min_d = new Date(this._contextObj.get(this.rangeMinDate));
-                } else {
-                    min_d = (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null);
-                }
-                if (this.rangeMaxDate) {
-                    max_d = new Date(this._contextObj.get(this.rangeMaxDate));
-                } else {
-                    max_d = (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null);
-                }
-                if (this.rangeMinTimeNumber !== "0") {
-                    if (this.rangeMinTimeNumber.indexOf(":") > -1) {
-                        // this is a time, split into an array
-                        min_t = this.rangeMinTimeNumber.split(":").map(function(i) { return i * 1; });
-                    } else {
-                        // this is a number (hopefully)
-                        min_t = this.rangeMinTimeNumber * 1;
-                    }
-                }
-                if (this.rangeMaxTimeNumber !== "0") {
-                    if (this.rangeMaxTimeNumber.indexOf(":") > -1) {
-                        // this is a time, split into an array
-                        max_t = this.rangeMaxTimeNumber.split(":").map(function(i) { return i * 1; });
-                    } else {
-                        // this is a number (hopefully)
-                        max_t = this.rangeMaxTimeNumber * 1;
-                    }
-                }
 
-                // DATEPICKER OPTIONS
-                var options_d = {
-                        format: this.dateFormat,
-                        min: min_d,
-                        max: max_d,
-                        disable: this.disabledDaysOfWeek.split(",").map(function(i) { return i * 1; }),
-                        onSet: lang.hitch(this, function(data) {
-                            this._handleDateTimeChange({ type: "date", value: data });
-                        })
-                    },
-                    // TIMEPICKER OPTIONS
-                    options_t = {
-                        format: this.timeFormat,
-                        interval: this.timeInterval,
-                        min: min_t,
-                        max: max_t,
-                        onSet: lang.hitch(this, function(data) {
-                            this._handleDateTimeChange({ type: "time", value: data });
-                        })
-                    };
+                this._getDatePickerOptions()
+                    .then(lang.hitch(this, function(options) {
+                        this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options);
+                    }))
+                    .then(lang.hitch(this, this._getTimePickerOptions))
+                    .then(lang.hitch(this, function(options) {
+                        this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options);
+                    }))
+                    .then(lang.hitch(this, function() {
+                        this._setDateTimePickerValues(this._contextObj.get(this.fromDate));
+                        var _fromDateHandle = this.subscribe({
+                            guid: this._contextObj.getGuid(), // the guid
+                            attr: this.fromDate, // the attributeName
+                            callback: lang.hitch(this, function(guid, attr, attrValue) {
+                                this._setDateTimePickerValues(attrValue);
+                            })
+                        });
+                        // this.unsubscribeAll();
+                        this._handles.push(_fromDateHandle);
 
 
-
-                this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options_d);
-                this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options_t);
-                this._setDateTimePickerValues(this._contextObj.get(this.fromDate));
-
-
-
-                var _fromDateHandle = this.subscribe({
-                    guid: this._contextObj.getGuid(), // the guid
-                    attr: this.fromDate, // the attributeName
-                    callback: lang.hitch(this, function(guid, attr, attrValue) {
-                        this._setDateTimePickerValues(attrValue);
-                    })
-                });
-                // this.unsubscribeAll();
-                this._handles.push(_fromDateHandle);
+                    }));
 
                 this._updateRendering(callback);
+
+
+
             },
 
             _setDateTimePickerValues: function(datetime) {
@@ -224,29 +272,6 @@ define([
                 logger.debug(this.id + ".resize");
             },
 
-            /**
-             * take values from the custom text fields and update the values in the context
-             */
-            // _pushValuesToContext: function() {
-            //     var originalFrom = new Date(this._contextObj.get(this.fromDate)),
-            //         input = {
-            //             startDate: this.startDateNode.value,
-            //             startTime: this.startTimeNode.value,
-            //         },
-            //         newFromMoment = new Moment(input.startDate + " " + input.startTime, this._convertToMomentFormatString(this.dateFormat + " " + this.timeFormat)),
-            //         newFrom = newFromMoment.toDate()
-
-            //     if (newFromMoment.isValid() && newFrom.getTime() !== originalFrom.getTime()) {
-            //         this._contextObj.set(this.fromDate, newFrom);
-            //     }
-
-            //     // do some calculation here, then set the value in this._contextObj
-            // },
-
-            /**
-             * since the datepair widget supports multiple heterogeneous libaries for formatting, we need to convert them.
-             *  Maybe we can just find two libraries that use the same formatting as Moment?
-             */
             _convertToMomentFormatString: function(formatString) {
                 // TIMEPICKER
                 // DATEPICKER

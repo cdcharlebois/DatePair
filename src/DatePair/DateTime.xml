@@ -21,17 +21,17 @@
     <!-- DATE -->
     <property key="rangeMinNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Date</caption>
-      <category>Date</category>
+      <category>Date Range</category>
       <description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description>
     </property>
     <property key="rangeMaxNumber" type="string" required="true" defaultValue="0">
       <caption>Latest Selectable Date</caption>
-      <category>Date</category>
+      <category>Date Range</category>
       <description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description>
     </property>
     <property key="rangeMinDate" type="attribute" required="false" isPath="optional" pathType="reference">
       <caption>Earliest Selectable Date (attr)</caption>
-      <category>Date</category>
+      <category>Date Range</category>
       <description>A Datetime attribute representing the earliest selectable date. **Overrides the integer value above**</description>
       <attributeTypes>
         <attributeType name="DateTime" />
@@ -39,7 +39,7 @@
     </property>
     <property key="rangeMaxDate" type="attribute" required="false" isPath="optional" pathType="reference">
       <caption>Latest Selectable Date (attr)</caption>
-      <category>Date</category>
+      <category>Date Range</category>
       <description>A Datetime attribute representing the latest selectable date. **Overrides the integer value above**</description>
       <attributeTypes>
         <attributeType name="DateTime" />
@@ -54,6 +54,25 @@
       <caption>Disabled Days</caption>
       <category>Date</category>
       <description>Comma-separated list of days of the week. i.e. `1,4,7` = Sunday, Wednesday, and Saturday are disabled for picking.</description>
+    </property>
+    <property key="sourceentity" type="entity" required="false" allowNonPersistableEntities="true">
+      <caption>Date Entity</caption>
+      <category>Date</category>
+      <description>Entity with a datetime attribute that will be greyed out.</description>
+    </property>
+    <property key="disabledDatesMf" type="microflow" required="false">
+      <caption>Microflow</caption>
+      <category>Date</category>
+      <description>A Microflow that returns a list of an entity with a datetime attribute. Datetimes matching these values will be greyed out.</description>
+      <returnType type="Object" isList="true" entityProperty="sourceentity"></returnType>
+    </property>
+    <property key="disabledDatesAttr" type="attribute" required="false" isPath="no" entityProperty="sourceentity">
+      <caption>Date Attribute</caption>
+      <category>Date</category>
+      <description>The Attribute which holds the date to be greyed out.</description>
+      <attributeTypes>
+        <attributeType name="DateTime" />
+      </attributeTypes>
     </property>
     <!-- TIME -->
     <property key="timeFormat" type="string" required="true" defaultValue="h:i A">
