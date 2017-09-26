@@ -139,7 +139,7 @@ define([
                     var customOptions = {
                         min: (this.rangeMinDate ? new Date(this._contextObj.get(this.rangeMinDate)) : (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null)),
                         max: (this.rangeMaxDate ? new Date(this._contextObj.get(this.rangeMaxDate)) : (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null)),
-                        disable: this.disabledDaysOfWeek.split(",").map(function(i) { return i * 1; })
+                        disable: this.disabledDaysOfWeek.split(/\s*\,\s*/).map(function(i) { return i * 1; })
                     };
                     if (this.disabledDatesMf) {
                         // check to make sure the sourceentity and attribute are setup
@@ -193,31 +193,47 @@ define([
                             this._handleDateTimeChange({ type: "time", value: data });
                         })
                     };
-                    var min_t, max_t;
+                    // OPTIONS FROM WIDGET PROPS
+                    var customOptions = {
+                        min: null,
+                        max: null,
+                        interval: this.timeInterval,
+                        disable: this.disabledTimeString.split(/\s*\,\s*/).map(function(pair) { return pair.split(":"); })
+                    };
+                    // var min_t, max_t;
                     if (this.rangeMinTimeNumber !== "0") {
                         if (this.rangeMinTimeNumber.indexOf(":") > -1) {
                             // this is a time, split into an array
-                            min_t = this.rangeMinTimeNumber.split(":").map(function(i) { return i * 1; });
+                            customOptions.min = this.rangeMinTimeNumber.split(":").map(function(i) { return i * 1; });
                         } else {
                             // this is a number (hopefully)
-                            min_t = this.rangeMinTimeNumber * 1;
+                            customOptions.min = this.rangeMinTimeNumber * 1;
                         }
                     }
                     if (this.rangeMaxTimeNumber !== "0") {
                         if (this.rangeMaxTimeNumber.indexOf(":") > -1) {
                             // this is a time, split into an array
-                            max_t = this.rangeMaxTimeNumber.split(":").map(function(i) { return i * 1; });
+                            customOptions.max = this.rangeMaxTimeNumber.split(":").map(function(i) { return i * 1; });
                         } else {
                             // this is a number (hopefully)
-                            max_t = this.rangeMaxTimeNumber * 1;
+                            customOptions.max = this.rangeMaxTimeNumber * 1;
                         }
                     }
-                    // OPTIONS FROM WIDGET PROPS
-                    resolve(Object.assign(defaultTimePickerOptions, {
-                        min: min_t,
-                        max: max_t,
-                        interval: this.timeInterval
-                    }));
+                    if (this.disabledTimesMf) {
+                        this._asyncCallMf(this.disabledTimesMf)
+                            .then(lang.hitch(this, function(data) {
+                                data.forEach(lang.hitch(this, function(d) {
+                                    customOptions.disable.push(new Date(d.get(this.disabledTimesAttr)));
+                                }));
+                            }))
+                            .then(lang.hitch(this, function() {
+                                resolve(Object.assign(defaultTimePickerOptions, customOptions));
+                            }));
+                    } else {
+                        resolve(Object.assign(defaultTimePickerOptions, customOptions));
+                    }
+
+
                 }));
 
             },
@@ -234,11 +250,17 @@ define([
 
                 this._getDatePickerOptions()
                     .then(lang.hitch(this, function(options) {
-                        this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options);
+                        return new Promise(lang.hitch(this, function(resolve) {
+                            this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options);
+                            resolve();
+                        }));
                     }))
                     .then(lang.hitch(this, this._getTimePickerOptions))
                     .then(lang.hitch(this, function(options) {
-                        this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options);
+                        return new Promise(lang.hitch(this, function(resolve) {
+                            this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options);
+                            resolve();
+                        }));
                     }))
                     .then(lang.hitch(this, function() {
                         this._setDateTimePickerValues(this._contextObj.get(this.fromDate));
@@ -257,9 +279,6 @@ define([
                         console.error(err);
                         this._updateRendering(callback);
                     }));
-
-
-
 
 
             },
