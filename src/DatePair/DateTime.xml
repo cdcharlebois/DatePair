@@ -13,6 +13,11 @@
         <attributeType name="DateTime" />
       </attributeTypes>
     </property>
+    <property key="editable" type="boolean" required="true" defaultValue="true">
+      <caption>Editable</caption>
+      <category>General</category>
+      <description></description>
+    </property>
     <!-- DATE -->
     <property key="rangeMinNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Date</caption>
@@ -45,10 +50,10 @@
       <category>Date</category>
       <description>See http://amsul.ca/pickadate.js/date/#formatting-rules for more info</description>
     </property>
-    <property key="editable" type="boolean" required="true" defaultValue="true">
-      <caption>Editable</caption>
-      <category>General</category>
-      <description></description>
+    <property key="disabledDaysOfWeek" type="string" required="false" defaultValue="">
+      <caption>Disabled Days</caption>
+      <category>Date</category>
+      <description>Comma-separated list of days of the week. i.e. `1,4,7` = Sunday, Wednesday, and Saturday are disabled for picking.</description>
     </property>
     <!-- TIME -->
     <property key="timeFormat" type="string" required="true" defaultValue="h:i A">

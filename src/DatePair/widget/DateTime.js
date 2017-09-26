@@ -172,6 +172,7 @@ define([
                         format: this.dateFormat,
                         min: min_d,
                         max: max_d,
+                        disable: this.disabledDaysOfWeek.split(",").map(function(i) { return i * 1; }),
                         onSet: lang.hitch(this, function(data) {
                             this._handleDateTimeChange({ type: "date", value: data });
                         })
