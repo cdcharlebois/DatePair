@@ -64,7 +64,7 @@
     <property key="rangeMinTimeNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Time</caption>
       <category>Time</category>
-      <description>An integer (intervals, relative to now). i.e. -1 is one interval ago, +2 is two intervals from now. You may also enter time in 24h format i.e. `08:30` for 8:30am or `16:45` for 4:45pm</description>
+      <description>An integer (intervals, relative to now). i.e. -1 is one interval ago, +2 is two intervals from now. You may also enter time in 24h format i.e.  `08:30` for 8:30am or `16:45` for 4:45pm</description>
     </property>
     <property key="rangeMaxTimeNumber" type="string" required="true" defaultValue="0">
       <caption>Latest Selectable Time</caption>
