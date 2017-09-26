@@ -143,9 +143,13 @@ define([
                     };
                     if (this.disabledDatesMf) {
                         // check to make sure the sourceentity and attribute are setup
+                        if (!(this.sourceentity && this.disabledDatesAttr)) {
+                            var msg = "[DateTime] >>> Looks like you may have forgotten to set the disabled date entity and/or datetime attribute. Please check your widget configuration"
+                                // console.error(msg);
+                            reject(msg);
+                        }
                         this._asyncCallMf(this.disabledDatesMf)
                             .then(lang.hitch(this, function(data) {
-                                console.log(data);
                                 data.forEach(lang.hitch(this, function(d) {
                                     customOptions.disable.push(new Date(d.get(this.disabledDatesAttr)))
                                 }));
@@ -247,11 +251,14 @@ define([
                         });
                         // this.unsubscribeAll();
                         this._handles.push(_fromDateHandle);
-
-
+                        this._updateRendering(callback);
+                    }))
+                    .catch(lang.hitch(this, function(err) {
+                        console.error(err);
+                        this._updateRendering(callback);
                     }));
 
-                this._updateRendering(callback);
+
 
 
 
