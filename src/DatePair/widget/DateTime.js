@@ -80,6 +80,9 @@ define([
                 if (!this.editable) {
                     this._setDisabled();
                 }
+                this.endDateNode.style.display = "none";
+                this.endTimeNode.style.display = "none";
+                this.toNode.style.display = "none";
             },
 
             _setDisabled: function() {
@@ -128,8 +131,8 @@ define([
                     };
                     // OPTIONS FROM WIDGET PROPS
                     var customOptions = {
-                        min: (this.rangeMinDate ? new Date(this._contextObj.get(this.rangeMinDate)) : (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : null)),
-                        max: (this.rangeMaxDate ? new Date(this._contextObj.get(this.rangeMaxDate)) : (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : null)),
+                        min: (this.rangeMinDate ? new Date(this._contextObj.get(this.rangeMinDate)) : (this.rangeMinNumber * 1 !== 0 ? this.rangeMinNumber * 1 : false)),
+                        max: (this.rangeMaxDate ? new Date(this._contextObj.get(this.rangeMaxDate)) : (this.rangeMaxNumber * 1 !== 0 ? this.rangeMaxNumber * 1 : false)),
                         disable: this.disabledDaysOfWeek.split(/\s*\,\s*/).map(function(i) { return i * 1; })
                     };
                     if (this.disabledDatesMf) {

@@ -4,6 +4,7 @@
         <widgetFiles>
             <!-- <widgetFile path="DatePair/DatePair.xml" /> -->
             <widgetFile path="DatePair/DateTime.xml" />
+            <widgetFile path="DatePair/Date.xml" />
         </widgetFiles>
         <files>
             <file path="DatePair/widget/" />
