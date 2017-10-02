@@ -285,7 +285,7 @@ define([
 
             _setDateTimePickerValues: function(datetime) {
                 this._date = new Date(datetime).setHours(0, 0, 0, 0);
-                this._time = (new Date(datetime) - new Date().setHours(0, 0, 0, 0)) / 1000 / 60;
+                this._time = (new Date(datetime) - new Date(datetime).setHours(0, 0, 0, 0)) / 1000 / 60;
                 if (this.dp) {
                     this.dp.set("select", new Date(datetime));
                 }
