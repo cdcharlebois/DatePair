@@ -7,7 +7,7 @@ typora-root-url: .
 
 # DateTime
 
-![Here it is](./basic.gif)
+![Here it is](./assets/basic.gif)
 
 
 ### Installation
