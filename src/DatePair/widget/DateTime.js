@@ -263,7 +263,13 @@ define([
                         }));
                     }))
                     .then(lang.hitch(this, function() {
+                        // set initial values
                         this._setDateTimePickerValues(this._contextObj.get(this.fromDate));
+                        // set display
+                        if (this.datePickerShouldStartOpen) {
+                            this.dp.open();
+                        }
+                        // add handlers
                         var _fromDateHandle = this.subscribe({
                             guid: this._contextObj.getGuid(), // the guid
                             attr: this.fromDate, // the attributeName
@@ -271,7 +277,6 @@ define([
                                 this._setDateTimePickerValues(attrValue);
                             })
                         });
-                        // this.unsubscribeAll();
                         this._handles.push(_fromDateHandle);
                         this._updateRendering(callback);
                     }))

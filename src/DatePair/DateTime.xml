@@ -74,6 +74,11 @@
         <attributeType name="DateTime" />
       </attributeTypes>
     </property>
+    <property key="datePickerShouldStartOpen" type="boolean" required="true" defaultValue="false">
+      <caption>Start Open?</caption>
+      <category>Date</category>
+      <description>Start the datepicker open</description>
+    </property>
     <!-- TIME -->
     <property key="timeFormat" type="string" required="true" defaultValue="h:i A">
       <caption>Time Format</caption>
