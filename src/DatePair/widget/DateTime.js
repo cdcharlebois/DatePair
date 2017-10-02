@@ -91,15 +91,15 @@ define([
 
             _initDatepicker: function($el, options) {
                 // var $el = $(node);
-                console.log("initializing datepicker on the following node: ");
-                console.log($el);
+                console.debug("initializing datepicker on the following node: ");
+                console.debug($el);
                 var $input = $el.pickadate(options);
                 return $input.pickadate("picker");
             },
 
             _initTimepicker: function($el, options) {
-                console.log("initializing timepicker on the following node: ");
-                console.log($el);
+                console.debug("initializing timepicker on the following node: ");
+                console.debug($el);
                 var $input = $el.pickatime(options);
                 return $input.pickatime("picker");
             },
@@ -189,8 +189,8 @@ define([
                     };
                     // OPTIONS FROM WIDGET PROPS
                     var customOptions = {
-                        min: null,
-                        max: null,
+                        min: false,
+                        max: false,
                         interval: this.timeInterval,
                         disable: this.disabledTimeString.split(/\s*\,\s*/).map(function(pair) { return pair.split(":"); })
                     };
