@@ -28,11 +28,6 @@ define([
         "DatePair/lib/picker",
         "DatePair/lib/picker.date",
         "DatePair/lib/picker.time",
-        // "DatePair/lib/datepair",
-        // "DatePair/lib/jquery.timepicker",
-        // "DatePair/lib/bootstrap.datepicker",
-
-        // "DatePair/lib/moment",
 
         "dojo/text!DatePair/widget/template/DateTime.html"
     ],
@@ -55,10 +50,6 @@ define([
         _picker,
         _datepicker,
         _timepicker,
-        // Datepair,
-        // _timepicker,
-        // _datepicker,
-        // Moment,
         widgetTemplate) {
         "use strict";
 
