@@ -66,6 +66,7 @@ define([
                 this.endDateNode.style.display = "none";
                 this.endTimeNode.style.display = "none";
                 this.toNode.style.display = "none";
+                this._addStyling();
             },
 
             /**

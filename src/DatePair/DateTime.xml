@@ -18,6 +18,11 @@
       <category>General</category>
       <description></description>
     </property>
+    <property key="displayAsModal" type="boolean" required="true" defaultValue="true">
+      <caption>Display As Modal?</caption>
+      <category>General</category>
+      <description>Use the modal stylesheet</description>
+    </property>
     <!-- DATE -->
     <property key="rangeMinNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Date</caption>
