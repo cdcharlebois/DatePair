@@ -59,10 +59,15 @@ define([
 
         return declare("DatePair.widget.Date", [DateTimeWidget], {
 
+            /**
+             * @override
+             */
             postCreate: function() {
                 // hide the time node.
                 this.startTimeNode.style.display = "none";
-
+                if (!this.editable) {
+                    this._setDisabled();
+                }
                 this.endDateNode.style.display = "none";
                 this.endTimeNode.style.display = "none";
                 this.toNode.style.display = "none";
@@ -70,6 +75,9 @@ define([
             },
 
             /**
+             * UPDATE
+             * ---
+             * @override
              * init the timepicker and datepicker, set initial values
              */
             update: function(obj, callback) {
