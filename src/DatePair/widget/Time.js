@@ -60,12 +60,14 @@ define([
         return declare("DatePair.widget.Time", [DateTimeWidget], {
 
             postCreate: function() {
-                // hide the time node.
+                // hide the date node.
                 this.startDateNode.style.display = "none";
-
                 this.endDateNode.style.display = "none";
                 this.endTimeNode.style.display = "none";
                 this.toNode.style.display = "none";
+                if (!this.editable) {
+                    this._setDisabled();
+                }
                 this._addStyling();
             },
 
