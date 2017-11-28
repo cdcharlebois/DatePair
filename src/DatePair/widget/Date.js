@@ -104,29 +104,7 @@ define([
                             this.dp.open();
                         }
                         // add handlers
-                        var _fromDateHandle = this.subscribe({
-                            guid: this._contextObj.getGuid(), // the guid
-                            attr: this.fromDate, // the attributeName
-                            callback: lang.hitch(this, function(guid, attr, attrValue) {
-                                this._clearValidation();
-                                this._setDateTimePickerValues(attrValue);
-                            })
-                        });
-                        var _objHandle = this.subscribe({
-                            guid: this._contextObj.getGuid(), // the guid
-                            callback: lang.hitch(this, function(guid, attr, attrValue) {
-                                this._clearValidation();
-                                this._setDateTimePickerValues(attrValue);
-                            })
-                        });
-                        var _valHandle = this.subscribe({
-                            guid: this._contextObj.getGuid(),
-                            val: true,
-                            callback: lang.hitch(this, function(validations) {
-                                this._handleValidations(validations);
-                            })
-                        })
-                        this._handles.concat([_fromDateHandle, _objHandle, _valHandle]);
+                        this._resetSubscriptions();
                         this._updateRendering(callback);
                     }))
                     .catch(lang.hitch(this, function(err) {
@@ -134,21 +112,6 @@ define([
                         this._updateRendering(callback);
                     }));
             },
-
-            _handleValidations: function(validations) {
-                var validation = validations[0],
-                    message = validation.getReasonByAttribute(this.fromDate);
-                this._showValidation(message); // update widget DOM
-            },
-
-            _showValidation: function(message) {
-                this.errorNode.innerHTML = message;
-                this.errorNode.style.display = "block";
-            },
-
-            _clearValidation: function() {
-                this.errorNode.style.display = "none";
-            }
 
         });
     });
