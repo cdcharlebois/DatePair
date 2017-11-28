@@ -1,10 +1,13 @@
-<div class="datetime-widget" data-dojo-attach-point="widgetBase">
-    <p>
-        <input data-dojo-attach-point="startDateNode" type="text" class="date start" />
-        <input data-dojo-attach-point="startTimeNode" type="text" class="time start" />
+<div class="datetime-widget form-group" data-dojo-attach-point="widgetBase">
+
+    <label data-dojo-attach-point="labelNode" class="control-label" for="">DateTime</label>
+    <div data-dojo-attach-point="inputsNode">
+        <input data-dojo-attach-point="startDateNode" type="text" class="date start form-control" />
+        <input data-dojo-attach-point="startTimeNode" type="text" class="time start form-control" />
         <span data-dojo-attach-point="toNode">to</span>
-        <input data-dojo-attach-point="endTimeNode" type="text" class="time end" />
-        <input data-dojo-attach-point="endDateNode" type="text" class="date end" />
-    </p>
-    <div class="alert alert-bordered alert-danger" data-dojo-attach-point="errorNode"></div>
+        <input data-dojo-attach-point="endTimeNode" type="text" class="time end form-control" />
+        <input data-dojo-attach-point="endDateNode" type="text" class="date end form-control" />
+        <div class="alert alert-bordered alert-danger" data-dojo-attach-point="errorNode"></div>
+    </div>
+
 </div>

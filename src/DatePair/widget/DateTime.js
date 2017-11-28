@@ -96,13 +96,35 @@ define([
                 }
             },
 
+            _addLabel: function() {
+                this.labelNode.innerText = this.label;
+                console.debug("trying to infer column width...");
+                if (this.domNode.previousElementSibling) {
+                    console.debug("checking previous element sibling...");
+                    if (dojoClass.contains(this.domNode.previousElementSibling, "form-group")) {
+                        console.debug("previous element sibling is a form group!");
+                        if (dojoClass.contains(this.domNode.previousElementSibling.firstElementChild, "control-label")) {
+                            console.debug("found a width!");
+                            var widthClass = this.domNode.previousElementSibling.firstElementChild.className.match(/col-sm-\d+/);
+                            var width = widthClass && widthClass[0] && widthClass[0].split("-")[2];
+                            if (width && !isNaN(width * 1)) {
+                                console.debug("valid width!");
+                                dojoClass.add(this.labelNode, "col-sm-" + width);
+                                dojoClass.add(this.inputsNode, "col-sm-" + (12 - width));
+                            }
+                        }
+                    }
+                }
+            },
+
             _addStyling: function() {
                 dojoClass.add(this.domNode, this.displayAsModal ? "dt-modal" : "dt-classic");
                 this._addPlaceholders();
+                this._addLabel();
             },
 
             _setDisabled: function() {
-                $("input", this.domNode.firstElementChild).prop("disabled", true);
+                $("input", this.domNode).prop("disabled", true);
             },
 
             _initDatepicker: function($el, options) {
@@ -272,14 +294,14 @@ define([
                 this._getDatePickerOptions()
                     .then(lang.hitch(this, function(options) {
                         return new Promise(lang.hitch(this, function(resolve) {
-                            this.dp = this._initDatepicker($(".date", this.domNode.firstElementChild), options);
+                            this.dp = this._initDatepicker($(".date", this.domNode), options);
                             resolve();
                         }));
                     }))
                     .then(lang.hitch(this, this._getTimePickerOptions))
                     .then(lang.hitch(this, function(options) {
                         return new Promise(lang.hitch(this, function(resolve) {
-                            this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options);
+                            this.tp = this._initTimepicker($(".time", this.domNode), options);
                             resolve();
                         }));
                     }))

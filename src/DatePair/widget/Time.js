@@ -86,7 +86,7 @@ define([
                 this._getTimePickerOptions()
                     .then(lang.hitch(this, function(options) {
                         return new Promise(lang.hitch(this, function(resolve) {
-                            this.tp = this._initTimepicker($(".time", this.domNode.firstElementChild), options);
+                            this.tp = this._initTimepicker($(".time", this.domNode), options);
                             resolve();
                         }));
                     }))
