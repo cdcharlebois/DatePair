@@ -87,8 +87,18 @@ define([
                 this._addStyling();
             },
 
+            _addPlaceholders: function() {
+                if (this.timePlaceholder) {
+                    $(this.startTimeNode).attr("placeholder", this.timePlaceholder);
+                }
+                if (this.datePlaceholder) {
+                    $(this.startDateNode).attr("placeholder", this.datePlaceholder);
+                }
+            },
+
             _addStyling: function() {
                 dojoClass.add(this.domNode, this.displayAsModal ? "dt-modal" : "dt-classic");
+                this._addPlaceholders();
             },
 
             _setDisabled: function() {
@@ -112,23 +122,31 @@ define([
 
             /**
              * data :: {
-             *  value: number
+             *  value.select: number | Array
              *  type:  "date" | "time"
              * }
              */
             _handleDateTimeChange: function(data) {
-                if (data.value.highlight || !(Array.isArray(data.value.select) || typeof data.value.select === "number")) return; // do nothing because this is hit by the subscription
-                if (data.type === "date") {
-                    if (Array.isArray(data.value.select)) {
-                        // need to correct the month
-                        data.value.select[1]++;
-                    }
-                    this._date = Array.isArray(data.value.select) ? new Date(data.value.select) : data.value.select;
+                var sel = data.value.select;
+                if ("undefined" === typeof sel) {
+                    this._contextObj.set(this.fromDate, null); // triggers subscription, which calls this again
                 } else {
-                    this._time = data.value.select;
+                    // if highlight is set, or the value is not either an Array or Number, return (subscription hits this)
+                    if (data.value.highlight || !(Array.isArray(sel) || typeof sel === "number")) return;
+                    if (data.type === "date") {
+                        // sel is either number or array
+                        if (Array.isArray(sel)) {
+                            // need to correct the month
+                            sel[1]++;
+                        }
+                        this._date = Array.isArray(sel) ? new Date(sel) : sel;
+                    } else {
+                        this._time = sel;
+                    }
+                    var newDate = new Date((this._date || 0) + (this._time || 0) * 60 * 1000);
+                    this._contextObj.set(this.fromDate, newDate);
                 }
-                var newDate = new Date((this._date || 0) + (this._time || 0) * 60 * 1000);
-                this._contextObj.set(this.fromDate, newDate);
+
             },
 
             _getDatePickerOptions: function() {
@@ -284,14 +302,20 @@ define([
             },
 
             _setDateTimePickerValues: function(datetime) {
-                this._date = new Date(datetime).setHours(0, 0, 0, 0);
-                this._time = (new Date(datetime) - new Date(datetime).setHours(0, 0, 0, 0)) / 1000 / 60;
-                if (this.dp) {
-                    this.dp.set("select", new Date(datetime));
+                if (datetime) {
+                    this._date = new Date(datetime).setHours(0, 0, 0, 0);
+                    this._time = (new Date(datetime) - new Date(datetime).setHours(0, 0, 0, 0)) / 1000 / 60;
+                    if (this.dp) {
+                        this.dp.set("select", new Date(datetime));
+                    }
+                    if (this.tp) {
+                        this.tp.set("select", new Date(datetime));
+                    }
+                } else {
+                    this.dp.set("clear");
+                    this.tp.set("clear");
                 }
-                if (this.tp) {
-                    this.tp.set("select", new Date(datetime));
-                }
+
             },
 
             resize: function(box) {
