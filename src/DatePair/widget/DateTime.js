@@ -312,8 +312,13 @@ define([
                         this.tp.set("select", new Date(datetime));
                     }
                 } else {
-                    this.dp.set("clear");
-                    this.tp.set("clear");
+                    if (this.dp) {
+                        this.dp.set("clear");
+                    }
+                    if (this.tp) {
+                        this.tp.set("clear");
+                    }
+
                 }
 
             },
@@ -425,12 +430,14 @@ define([
             },
 
             _onClickUpYear: function() {
-                var current = this.dp.get("select");
-                this.dp.set("select", [current.year + 1, current.month, current.date]);
+                var newDate = new Date((this._date || 0));
+                newDate.setFullYear(newDate.getFullYear() + 1);
+                this.dp.set("select", newDate * 1);
             },
             _onClickDownYear: function() {
-                var current = this.dp.get("select");
-                this.dp.set("select", [current.year - 1, current.month, current.date]);
+                var newDate = new Date((this._date || 0));
+                newDate.setFullYear(newDate.getFullYear() - 1);
+                this.dp.set("select", newDate * 1);
             },
 
         });
