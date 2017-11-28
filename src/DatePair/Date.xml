@@ -23,6 +23,21 @@
       <category>General</category>
       <description>Use the modal stylesheet</description>
     </property>
+    <property key="label" type="string" required="false" defaultValue="">
+      <caption>Label</caption>
+      <category>General</category>
+      <description></description>
+    </property>
+    <property key="labelWidth" type="integer" required="true" defaultValue="0">
+      <caption>Label Width</caption>
+      <category>General</category>
+      <description>How many (of the 12) columns should the label take up? Leave as 0 to infer the width automagically (based on the previous sibling)</description>
+    </property>
+    <property key="showLabel" type="boolean" required="true" defaultValue="true">
+      <caption>Show Label</caption>
+      <category>General</category>
+      <description></description>
+    </property>
     <!-- DATE -->
     <property key="rangeMinNumber" type="string" required="true" defaultValue="0">
       <caption>Earliest Selectable Date</caption>

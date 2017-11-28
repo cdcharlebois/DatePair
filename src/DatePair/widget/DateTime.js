@@ -98,29 +98,41 @@ define([
 
             _addLabel: function() {
                 this.labelNode.innerText = this.label;
-                console.debug("trying to infer column width...");
-                if (this.domNode.previousElementSibling) {
-                    console.debug("checking previous element sibling...");
-                    if (dojoClass.contains(this.domNode.previousElementSibling, "form-group")) {
-                        console.debug("previous element sibling is a form group!");
-                        if (dojoClass.contains(this.domNode.previousElementSibling.firstElementChild, "control-label")) {
-                            console.debug("found a width!");
-                            var widthClass = this.domNode.previousElementSibling.firstElementChild.className.match(/col-sm-\d+/);
-                            var width = widthClass && widthClass[0] && widthClass[0].split("-")[2];
-                            if (width && !isNaN(width * 1)) {
-                                console.debug("valid width!");
-                                dojoClass.add(this.labelNode, "col-sm-" + width);
-                                dojoClass.add(this.inputsNode, "col-sm-" + (12 - width));
+                if (this.labelWidth === 0) {
+                    console.debug("trying to infer column width...");
+                    if (this.domNode.previousElementSibling) {
+                        console.debug("checking previous element sibling...");
+                        if (dojoClass.contains(this.domNode.previousElementSibling, "form-group")) {
+                            console.debug("previous element sibling is a form group!");
+                            if (dojoClass.contains(this.domNode.previousElementSibling.firstElementChild, "control-label")) {
+                                console.debug("found a width!");
+                                var widthClass = this.domNode.previousElementSibling.firstElementChild.className.match(/col-sm-\d+/);
+                                var width = widthClass && widthClass[0] && widthClass[0].split("-")[2];
+                                if (width && !isNaN(width * 1)) {
+                                    console.debug("valid width!");
+                                    dojoClass.add(this.labelNode, "col-sm-" + width);
+                                    dojoClass.add(this.inputsNode, "col-sm-" + (12 - width));
+                                }
                             }
                         }
                     }
+                } else {
+                    dojoClass.add(this.labelNode, "col-sm-" + this.labelWidth);
+                    dojoClass.add(this.inputsNode, "col-sm-" + (12 - this.labelWidth));
                 }
+
             },
 
             _addStyling: function() {
                 dojoClass.add(this.domNode, this.displayAsModal ? "dt-modal" : "dt-classic");
                 this._addPlaceholders();
-                this._addLabel();
+                if (this.showLabel) {
+                    dojoClass.add(this.domNode, "form-group");
+                    this._addLabel();
+                } else {
+                    this.labelNode.style.display = "none";
+                }
+                this.inputsNode.style.display = "flex";
             },
 
             _setDisabled: function() {

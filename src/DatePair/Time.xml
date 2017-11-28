@@ -23,6 +23,21 @@
       <category>General</category>
       <description>Use the modal stylesheet</description>
     </property>
+    <property key="label" type="string" required="false" defaultValue="">
+      <caption>Label</caption>
+      <category>General</category>
+      <description></description>
+    </property>
+    <property key="labelWidth" type="integer" required="true" defaultValue="0">
+      <caption>Label Width</caption>
+      <category>General</category>
+      <description>How many (of the 12) columns should the label take up? Leave as 0 to infer the width automagically (based on the previous sibling)</description>
+    </property>
+    <property key="showLabel" type="boolean" required="true" defaultValue="true">
+      <caption>Show Label</caption>
+      <category>General</category>
+      <description></description>
+    </property>
     <!-- DATE -->
     <!-- <property key="rangeMinNumber" type="string" required="true" defaultValue="0"><caption>Earliest Selectable Date</caption><category>Date</category><description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description></property><property key="rangeMaxNumber" type="string" required="true" defaultValue="0"><caption>Latest Selectable Date</caption><category>Date</category><description>An integer (days, relative to today). i.e. -1 is yesterday, +2 is the day after tomorrow.</description></property><property key="rangeMinDate" type="attribute" required="false" isPath="optional" pathType="reference"><caption>Earliest Selectable Date (attr)</caption><category>Date</category><description>A Datetime attribute representing the earliest selectable date. **Overrides the integer value above**</description><attributeTypes><attributeType name="DateTime" /></attributeTypes></property><property key="rangeMaxDate" type="attribute" required="false" isPath="optional" pathType="reference"><caption>Latest Selectable Date (attr)</caption><category>Date</category><description>A Datetime attribute representing the latest selectable date. **Overrides the integer value above**</description><attributeTypes><attributeType name="DateTime" /></attributeTypes></property><property key="dateFormat" type="string" required="true" defaultValue="m/d/yyyy"><caption>Date Format</caption><category>Date</category><description>See http://amsul.ca/pickadate.js/date/#formatting-rules for more info</description></property><property key="disabledDaysOfWeek" type="string" required="false" defaultValue=""><caption>Disabled Days</caption><category>Date Restrictions</category><description>Comma-separated list of days of the week. i.e. `1,4,7` = Sunday, Wednesday, and Saturday are disabled for picking.</description></property><property key="sourceentity" type="entity" required="false" allowNonPersistableEntities="true"><caption>Date Entity</caption><category>Date Restrictions</category><description>Entity with a datetime attribute that will be greyed out.</description></property><property key="disabledDatesMf" type="microflow" required="false"><caption>Microflow</caption><category>Date Restrictions</category><description>A Microflow that returns a list of an entity with a datetime attribute. Datetimes matching these values will be greyed out.</description><returnType type="Object" isList="true" entityProperty="sourceentity"></returnType></property><property key="disabledDatesAttr" type="attribute" required="false" isPath="no" entityProperty="sourceentity"><caption>Date Attribute</caption><category>Date Restrictions</category><description>The Attribute which holds the date to be greyed out.</description><attributeTypes><attributeType name="DateTime" /></attributeTypes></property><property key="datePickerShouldStartOpen" type="boolean" required="true" defaultValue="false"><caption>Start Open?</caption><category>Date</category><description>Start the datepicker open</description></property> -->
     <!-- TIME -->
