@@ -82,6 +82,7 @@ define([
                 this.endDateNode.style.display = "none";
                 this.endTimeNode.style.display = "none";
                 this.toNode.style.display = "none";
+                this.errorNode.style.display = "none";
 
                 this._addStyling();
             },
@@ -116,9 +117,13 @@ define([
              * }
              */
             _handleDateTimeChange: function(data) {
-                if (data.value.highlight || typeof data.value.select === "object") return; // do nothing because this is hit by the subscription
+                if (data.value.highlight || !(Array.isArray(data.value.select) || typeof data.value.select === "number")) return; // do nothing because this is hit by the subscription
                 if (data.type === "date") {
-                    this._date = data.value.select;
+                    if (Array.isArray(data.value.select)) {
+                        // need to correct the month
+                        data.value.select[1]++;
+                    }
+                    this._date = Array.isArray(data.value.select) ? new Date(data.value.select) : data.value.select;
                 } else {
                     this._time = data.value.select;
                 }
@@ -132,7 +137,8 @@ define([
                         format: this.dateFormat,
                         onSet: lang.hitch(this, function(data) {
                             this._handleDateTimeChange({ type: "date", value: data });
-                        })
+                        }),
+                        onRender: lang.hitch(this, this._showYearsNav)
                     };
                     // OPTIONS FROM WIDGET PROPS
                     var customOptions = {
@@ -334,6 +340,7 @@ define([
                     attr: this.fromDate, // the attributeName
                     callback: lang.hitch(this, function(guid, attr, attrValue) {
                         this._setDateTimePickerValues(attrValue);
+                        this._clearValidation();
                     })
                 });
                 //object
@@ -341,8 +348,65 @@ define([
                     guid: this._contextObj.getGuid(), // the guid
                     callback: lang.hitch(this, function(guid, attr, attrValue) {
                         this._setDateTimePickerValues(attrValue);
+                        this._clearValidation();
                     })
                 });
+                this.subscribe({
+                    guid: this._contextObj.getGuid(),
+                    val: true,
+                    callback: lang.hitch(this, function(validations) {
+                        this._handleValidations(validations);
+                    })
+                });
+            },
+
+            /**
+             * Handle Validations
+             */
+            _handleValidations: function(validations) {
+                var validation = validations[0],
+                    message = validation.getReasonByAttribute(this.fromDate);
+                this._showValidation(message); // update widget DOM
+            },
+
+            _showValidation: function(message) {
+                this.errorNode.innerHTML = message;
+                this.errorNode.style.display = "block";
+            },
+
+            _clearValidation: function() {
+                this.errorNode.style.display = "none";
+            },
+
+            /**
+             * Show Years Nav
+             * ---
+             * show the buttons to navigate up or down a year
+             * @since Nov 28, 2017
+             */
+            _showYearsNav: function() {
+                var $upButton = $(document.createElement("span")),
+                    $downButton = $(document.createElement("span")),
+                    $yearNode = $(".picker__year", this.domNode);
+                $upButton
+                    .text("+")
+                    .addClass("picker__year-change")
+                    .on("click", lang.hitch(this, this._onClickUpYear));
+                $downButton
+                    .text("-")
+                    .addClass("picker__year-change")
+                    .on("click", lang.hitch(this, this._onClickDownYear));
+                $upButton.insertAfter($yearNode);
+                $downButton.insertBefore($yearNode);
+            },
+
+            _onClickUpYear: function() {
+                var current = this.dp.get("select");
+                this.dp.set("select", [current.year + 1, current.month, current.date]);
+            },
+            _onClickDownYear: function() {
+                var current = this.dp.get("select");
+                this.dp.set("select", [current.year - 1, current.month, current.date]);
             },
 
         });

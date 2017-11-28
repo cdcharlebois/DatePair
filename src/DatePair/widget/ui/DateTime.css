@@ -1012,3 +1012,8 @@
     padding: 0;
     position: relative;
 }
+
+.picker__year-change {
+    color: #999;
+    padding: 0.6em;
+}
