@@ -1,11 +1,3 @@
-/**
- * TODO:
- *  - clean up imports
- *  - put handlers in the right place, make sure that uninitialize is working properly
- *  - [nice to] clean up the formatting strings
- *  - 
- */
-
 define([
         "dojo/_base/declare",
         "mxui/widget/_WidgetBase",
