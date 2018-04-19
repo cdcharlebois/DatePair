@@ -1,18 +1,18 @@
 <div class="datetime-widget" data-dojo-attach-point="widgetBase">
 
     <label data-dojo-attach-point="labelNode" class="control-label" for=""></label>
-    <div data-dojo-attach-point="inputsNode">
-        <div>
-            <input data-dojo-attach-point="startDateNode" type="text" class="date start form-control" />
+    <div data-dojo-attach-point="controlNode">
+        <div data-dojo-attach-point="inputsNode">
+            <div>
+                <input data-dojo-attach-point="startDateNode" type="text" class="date start form-control" />
+            </div>
+            <div class="picker__in-between" data-dojo-attach-point="inBetweenNode">at</div>
+            <div>
+                <input data-dojo-attach-point="startTimeNode" type="text" class="time start form-control" />
+            </div>
         </div>
-        <div>
-            <input data-dojo-attach-point="startTimeNode" type="text" class="time start form-control" />
-        </div>
-
-        <span data-dojo-attach-point="toNode">to</span>
-        <input data-dojo-attach-point="endTimeNode" type="text" class="time end form-control" />
-        <input data-dojo-attach-point="endDateNode" type="text" class="date end form-control" />
-        <div class="alert alert-bordered alert-danger" data-dojo-attach-point="errorNode"></div>
+        <div class="alert alert-danger" data-dojo-attach-point="errorNode"></div>
     </div>
+
 
 </div>

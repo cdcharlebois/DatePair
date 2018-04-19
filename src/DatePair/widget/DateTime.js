@@ -58,6 +58,9 @@ define([
             _date: null,
             _time: null,
 
+            // nodes
+            inBetweenNode: null,
+
             // Internal variables.
             _handles: null,
             _contextObj: null,
@@ -71,10 +74,7 @@ define([
                 if (!this.editable) {
                     this._setDisabled();
                 }
-                this.endDateNode.style.display = "none";
-                this.endTimeNode.style.display = "none";
-                this.toNode.style.display = "none";
-                this.errorNode.style.display = "none";
+                dojoClass.add(this.errorNode, "hidden");
 
                 this._addStyling();
             },
@@ -82,9 +82,11 @@ define([
             _addPlaceholders: function() {
                 if (this.timePlaceholder) {
                     $(this.startTimeNode).attr("placeholder", this.timePlaceholder);
+                    $(this.startTimeNode).removeProp("readonly");
                 }
                 if (this.datePlaceholder) {
                     $(this.startDateNode).attr("placeholder", this.datePlaceholder);
+                    $(this.startDateNode).removeProp("readonly");
                 }
             },
 
@@ -103,14 +105,14 @@ define([
                                 if (width && !isNaN(width * 1)) {
                                     console.debug("valid width!");
                                     dojoClass.add(this.labelNode, "col-sm-" + width);
-                                    dojoClass.add(this.inputsNode, "col-sm-" + (12 - width));
+                                    dojoClass.add(this.controlNode, "col-sm-" + (12 - width));
                                 }
                             }
                         }
                     }
                 } else {
                     dojoClass.add(this.labelNode, "col-sm-" + this.labelWidth);
-                    dojoClass.add(this.inputsNode, "col-sm-" + (12 - this.labelWidth));
+                    dojoClass.add(this.controlNode, "col-sm-" + (12 - this.labelWidth));
                 }
 
             },
@@ -122,9 +124,10 @@ define([
                     dojoClass.add(this.domNode, "form-group");
                     this._addLabel();
                 } else {
-                    this.labelNode.style.display = "none";
+                    dojoClass.add(this.labelNode, "hidden");
                 }
-                this.inputsNode.style.display = "flex";
+                dojoStyle.set(this.inputsNode, "display", "flex");
+                dojoStyle.set(this.inputsNode, "align-items", "center");
             },
 
             _setDisabled: function() {
@@ -425,12 +428,13 @@ define([
             },
 
             _showValidation: function(message) {
-                this.errorNode.innerHTML = message;
-                this.errorNode.style.display = "block";
+                dojoHtml.set(this.errorNode, message);
+                dojoClass.remove(this.errorNode, "hidden");
+                dojoStyle.set(this.errorNode, "margin-top", "8px");
             },
 
             _clearValidation: function() {
-                this.errorNode.style.display = "none";
+                dojoClass.add(this.errorNode, "hidden");
             },
 
             /**

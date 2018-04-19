@@ -14,13 +14,13 @@ define([
         // "dojo/dom",
         // "dojo/dom-prop",
         // "dojo/dom-geometry",
-        // "dojo/dom-class",
+        "dojo/dom-class",
         "dojo/dom-style",
         // "dojo/dom-construct",
         // "dojo/_base/array",
         "dojo/_base/lang",
         // "dojo/text",
-        // "dojo/html",
+        "dojo/html",
         // "dojo/_base/event",
 
         // external
@@ -39,13 +39,13 @@ define([
         // dojoDom,
         // dojoProp,
         // dojoGeometry,
-        // dojoClass,
+        dojoClass,
         dojoStyle,
         // dojoConstruct,
         // dojoArray,
         lang,
         // dojoText,
-        // dojoHtml,
+        dojoHtml,
         // dojoEvent,
         _jQuery,
         _picker,
@@ -65,13 +65,11 @@ define([
             postCreate: function() {
                 // hide the time node.
                 this.startTimeNode.style.display = "none";
+                dojoStyle.set(this.inBetweenNode, "display", "none");
                 if (!this.editable) {
                     this._setDisabled();
                 }
-                this.endDateNode.style.display = "none";
-                this.endTimeNode.style.display = "none";
-                this.toNode.style.display = "none";
-                this.errorNode.style.display = "none";
+                dojoClass.add(this.errorNode, "hidden");
                 this._addStyling();
             },
 

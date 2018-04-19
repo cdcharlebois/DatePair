@@ -1017,3 +1017,7 @@
     color: #999;
     padding: 0.6em;
 }
+
+.picker__in-between {
+    padding: 0 0.5em;
+}
