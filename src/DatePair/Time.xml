@@ -90,5 +90,11 @@
         <attributeType name="DateTime" />
       </attributeTypes>
     </property>
+    <property key="onChangeMf" type="microflow" required="false">
+      <caption>On change</caption>
+      <category>General</category>
+      <description></description>
+      <returnType type="Void" />
+    </property>
   </properties>
 </widget>

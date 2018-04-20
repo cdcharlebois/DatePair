@@ -174,6 +174,23 @@ define([
                     }
                     var newDate = new Date((this._date || 0) + (this._time || 0) * 60 * 1000);
                     this._contextObj.set(this.fromDate, newDate);
+                    if (this.onChangeMf) {
+                        // call the microflow
+                        mx.data.action({
+                            params: {
+                                applyto: "selection",
+                                actionname: this.onChangeMf,
+                                guids: [this._contextObj.getGuid()]
+                            },
+                            origin: this.mxform,
+                            callback: lang.hitch(this, function(res) {
+                                console.debug("Microflow " + this.onChangeMf + " executed.")
+                            }),
+                            error: function(err) {
+                                console.error(err);
+                            }
+                        })
+                    }
                 }
 
             },
