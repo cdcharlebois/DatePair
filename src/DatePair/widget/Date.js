@@ -66,10 +66,8 @@ define([
                 // hide the time node.
                 this.startTimeNode.style.display = "none";
                 dojoStyle.set(this.inBetweenNode, "display", "none");
-                if (!this.editable) {
-                    this._setDisabled();
-                }
                 dojoClass.add(this.errorNode, "hidden");
+                this._checkAndOptionallySetDisabled();
                 this._addStyling();
             },
 
@@ -82,10 +80,6 @@ define([
             update: function(obj, callback) {
                 logger.debug(this.id + ".update");
                 this._contextObj = obj;
-
-                if (this._contextObj.isReadonlyAttr(this.fromDate)) {
-                    this._setDisabled();
-                }
 
                 this._getDatePickerOptions()
                     .then(lang.hitch(this, function(options) {

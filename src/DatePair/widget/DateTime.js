@@ -71,12 +71,16 @@ define([
 
             postCreate: function() {
                 logger.debug(this.id + ".postCreate");
-                if (!this.editable) {
+
+                dojoClass.add(this.errorNode, "hidden");
+                this._checkAndOptionallySetDisabled();
+                this._addStyling();
+            },
+
+            _checkAndOptionallySetDisabled: function() {
+                if (this.readOnly || !this.editable) {
                     this._setDisabled();
                 }
-                dojoClass.add(this.errorNode, "hidden");
-
-                this._addStyling();
             },
 
             _addPlaceholders: function() {
@@ -311,10 +315,6 @@ define([
                 logger.debug(this.id + ".update");
                 this._contextObj = obj;
 
-                if (this._contextObj.isReadonlyAttr(this.fromDate)) {
-                    this._setDisabled();
-                }
-
                 this._getDatePickerOptions()
                     .then(lang.hitch(this, function(options) {
                         return new Promise(lang.hitch(this, function(resolve) {
@@ -439,19 +439,27 @@ define([
              * Handle Validations
              */
             _handleValidations: function(validations) {
-                var validation = validations[0],
+                var validation = validations.find(lang.hitch(this, function(v) { return v.getGuid() === this._contextObj.getGuid() })),
                     message = validation.getReasonByAttribute(this.fromDate);
-                this._showValidation(message); // update widget DOM
+                if (message) {
+                    if (!this.readOnly && this.editable) {
+                        this._showValidation(message); // update widget DOM
+                    }
+                    validation.removeAttribute(this.fromDate);
+                }
+
             },
 
             _showValidation: function(message) {
                 dojoHtml.set(this.errorNode, message);
                 dojoClass.remove(this.errorNode, "hidden");
+                dojoClass.add(this.domNode, "has-error");
                 dojoStyle.set(this.errorNode, "margin-top", "8px");
             },
 
             _clearValidation: function() {
                 dojoClass.add(this.errorNode, "hidden");
+                dojoClass.remove(this.domNode, "has-error");
             },
 
             /**

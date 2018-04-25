@@ -1,6 +1,6 @@
 {
   "name": "DatePair",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "easily configure start and end dates",
   "license": "Apache 2",
   "author": "Conner Charlebois",

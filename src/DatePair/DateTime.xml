@@ -31,7 +31,7 @@
     <property key="editable" type="boolean" required="true" defaultValue="true">
       <caption>Editable</caption>
       <category>General</category>
-      <description></description>
+      <description>Only applies if the enclosing dataview is editable. Use this with conditional visibility to restrict based on role</description>
     </property>
     <property key="displayAsModal" type="boolean" required="true" defaultValue="true">
       <caption>Display As Modal?</caption>
